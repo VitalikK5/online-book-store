@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>6.2.7.Final</version>
+			<version>6.3.0.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -93,6 +93,11 @@
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-checkstyle-plugin</artifactId>
 			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${liquibase.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
