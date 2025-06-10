@@ -1,51 +1,47 @@
 databaseChangeLog:
   - changeSet:
-      id: create-books-table
-      author: developer
+      id: 01-create-books-table
+      author: Vitalii
       changes:
         - createTable:
             tableName: books
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: title
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
                   name: author
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
                   name: isbn
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
                     nullable: false
                     unique: true
               - column:
-                  name: category_id
-                  type: BIGINT
-              - column:
                   name: price
-                  type: DECIMAL(10,2)
+                  type: decimal
                   constraints:
                     nullable: false
               - column:
                   name: description
-                  type: VARCHAR(500)
+                  type: varchar(255)
               - column:
                   name: cover_image
-                  type: VARCHAR(500)
+                  type: varchar(255)
               - column:
                   name: is_deleted
-                  type: TINYINT(1)
-                  defaultValueNumeric: 0
+                  type: bit
                   constraints:
                     nullable: false
