@@ -37,12 +37,10 @@ public class Book {
 
     private String description;
 
-    @Column(name = "cover_image")
     private String coverImage;
 
-    @Column(name = "category_id")
     private Long categoryId;
 
-    @Column(name = "is_deleted", nullable = false)
+    @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean isDeleted = false;
 }
