@@ -10,14 +10,14 @@ import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "books")
 @SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id=?")
-@SQLRestriction("is_deleted = false")
+@Where(clause = "is_deleted = false")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +41,6 @@ public class Book {
 
     private Long categoryId;
 
-    @Column(columnDefinition = "TINYINT(1)", nullable = false)
+    @Column(nullable = false)
     private boolean isDeleted = false;
 }

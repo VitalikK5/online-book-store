@@ -8,41 +8,44 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
+                  type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: title
-                  type: varchar(255)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
               - column:
                   name: author
-                  type: varchar(255)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
               - column:
                   name: isbn
-                  type: varchar(255)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
                     unique: true
               - column:
+                  name: category_id
+                  type: BIGINT
+              - column:
                   name: price
-                  type: decimal
+                  type: DECIMAL(10,2)
                   constraints:
                     nullable: false
               - column:
                   name: description
-                  type: varchar(255)
+                  type: VARCHAR(500)
               - column:
                   name: cover_image
-                  type: varchar(255)
+                  type: VARCHAR(500)
               - column:
                   name: is_deleted
-                  type: TINYINT
-                  defaultValue: 0
+                  type: TINYINT(1)
+                  defaultValueNumeric: 0
                   constraints:
                     nullable: false
