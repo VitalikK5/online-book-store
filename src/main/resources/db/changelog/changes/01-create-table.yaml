@@ -30,9 +30,6 @@ databaseChangeLog:
                     nullable: false
                     unique: true
               - column:
-                  name: category_id
-                  type: BIGINT
-              - column:
                   name: price
                   type: DECIMAL(10,2)
                   constraints:

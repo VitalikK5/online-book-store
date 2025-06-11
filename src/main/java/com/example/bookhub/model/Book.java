@@ -39,8 +39,6 @@ public class Book {
 
     private String coverImage;
 
-    private Long categoryId;
-
     @Column(nullable = false)
     private boolean isDeleted = false;
 }
