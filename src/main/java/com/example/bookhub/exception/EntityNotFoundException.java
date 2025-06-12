@@ -1,7 +1,7 @@
 package com.example.bookhub.exception;
 
-public class EntityNotFoundExceptio extends RuntimeException {
-  public EntityNotFoundExceptio(String message) {
-    super(message);
-  }
+public class EntityNotFoundException extends RuntimeException {
+    public EntityNotFoundException(String message, Exception e) {
+        super(message, e);
+    }
 }
