@@ -19,6 +19,7 @@ public class BookSpecificationProviderManager implements SpecificationProviderMa
                 .filter(b -> b.getKey().equals(key))
                 .findFirst()
                 .orElseThrow(() ->
-                        new RuntimeException("Can't find correct specification provider for key: " + key));
+                        new IllegalArgumentException(
+                                "No SpecificationProvider found for key '" + key + "'"));
     }
 }
