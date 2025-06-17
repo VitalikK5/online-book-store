@@ -6,5 +6,6 @@ public class BookSpecificationKeys {
     public static final String ISBN = "isbn";
     public static final String CATEGORY = "category";
 
-    private BookSpecificationKeys() {}
+    private BookSpecificationKeys() {
+    }
 }
