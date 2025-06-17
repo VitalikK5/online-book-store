@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 public class IsbnSpecificationProvider implements SpecificationProvider<Book> {
     @Override
     public String getKey() {
-        return "isbn";
+        return BookSpecificationKeys.ISBN;
     }
 
     @Override
     public Specification<Book> getSpecification(String[] params) {
         return (root, query, criteriaBuilder) ->
-                root.get("isbn").in(Arrays.asList(params));
+                root.get(BookSpecificationKeys.ISBN).in(Arrays.asList(params));
     }
 }

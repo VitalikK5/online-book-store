@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 public class TitleSpecificationProvider implements SpecificationProvider<Book> {
     @Override
     public String getKey() {
-        return "title";
+        return BookSpecificationKeys.TITLE;
     }
 
     @Override
     public Specification<Book> getSpecification(String[] params) {
 
         return (root, query, criteriaBuilder) ->
-                root.get("title").in(Arrays.asList(params));
+                root.get(BookSpecificationKeys.TITLE).in(Arrays.asList(params));
     }
 }

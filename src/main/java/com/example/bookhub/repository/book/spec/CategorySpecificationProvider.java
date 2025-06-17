@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 public class CategorySpecificationProvider implements SpecificationProvider<Book> {
     @Override
     public String getKey() {
-        return "category";
+        return BookSpecificationKeys.CATEGORY;
     }
 
     @Override
     public Specification<Book> getSpecification(String[] params) {
         return (root, query, criteriaBuilder) ->
-                root.get("category").in(Arrays.asList(params));
+                root.get(BookSpecificationKeys.CATEGORY).in(Arrays.asList(params));
     }
 }
