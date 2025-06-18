@@ -11,7 +11,11 @@ import org.mapstruct.MappingTarget;
 public interface BookMapper {
     BookDto toDto(Book book);
 
+    @org.mapstruct.Mapping(target = "id", ignore = true)
+    @org.mapstruct.Mapping(target = "deleted", ignore = true)
     Book toModel(CreateBookRequestDto requestDto);
 
+    @org.mapstruct.Mapping(target = "id", ignore = true)
+    @org.mapstruct.Mapping(target = "deleted", ignore = true)
     void updateFromDto(@MappingTarget Book book, CreateBookRequestDto requestDto);
 }
