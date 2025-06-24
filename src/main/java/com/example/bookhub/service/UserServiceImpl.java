@@ -6,7 +6,6 @@ import com.example.bookhub.exception.RegistrationException;
 import com.example.bookhub.mapper.UserMapper;
 import com.example.bookhub.model.User;
 import com.example.bookhub.repository.user.UserRepository;
-import com.example.bookhub.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
