@@ -1,4 +1,4 @@
-package com.example.bookhub.dto;
+package com.example.bookhub.dto.book;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

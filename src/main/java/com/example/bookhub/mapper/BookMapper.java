@@ -1,8 +1,8 @@
 package com.example.bookhub.mapper;
 
 import com.example.bookhub.config.MapperConfig;
-import com.example.bookhub.dto.BookDto;
-import com.example.bookhub.dto.CreateBookRequestDto;
+import com.example.bookhub.dto.book.BookDto;
+import com.example.bookhub.dto.book.CreateBookRequestDto;
 import com.example.bookhub.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
