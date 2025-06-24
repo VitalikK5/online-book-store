@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-@FieldMatch
+@FieldMatch(first = "password", second = "repeatPassword", message = "Passwords must match")
 @Data
 public class UserRegistrationRequestDto {
     @NotBlank
