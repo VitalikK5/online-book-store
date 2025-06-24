@@ -21,8 +21,17 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         try {
-            PropertyDescriptor firstDescriptor = BeanUtils.getPropertyDescriptor(value.getClass(), firstFieldName);
-            PropertyDescriptor secondDescriptor = BeanUtils.getPropertyDescriptor(value.getClass(), secondFieldName);
+            PropertyDescriptor firstDescriptor =
+                    BeanUtils.getPropertyDescriptor(
+                            value.getClass(),
+                            firstFieldName
+                    );
+
+            PropertyDescriptor secondDescriptor =
+                    BeanUtils.getPropertyDescriptor(
+                            value.getClass(),
+                            secondFieldName
+                    );
 
             if (firstDescriptor == null || secondDescriptor == null) {
                 return false;
