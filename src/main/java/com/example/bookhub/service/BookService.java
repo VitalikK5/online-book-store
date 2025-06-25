@@ -1,8 +1,8 @@
 package com.example.bookhub.service;
 
-import com.example.bookhub.dto.BookDto;
-import com.example.bookhub.dto.BookSearchParameters;
-import com.example.bookhub.dto.CreateBookRequestDto;
+import com.example.bookhub.dto.book.BookDto;
+import com.example.bookhub.dto.book.BookSearchParameters;
+import com.example.bookhub.dto.book.CreateBookRequestDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,8 +1,8 @@
 package com.example.bookhub.service;
 
-import com.example.bookhub.dto.BookDto;
-import com.example.bookhub.dto.BookSearchParameters;
-import com.example.bookhub.dto.CreateBookRequestDto;
+import com.example.bookhub.dto.book.BookDto;
+import com.example.bookhub.dto.book.BookSearchParameters;
+import com.example.bookhub.dto.book.CreateBookRequestDto;
 import com.example.bookhub.mapper.BookMapper;
 import com.example.bookhub.model.Book;
 import com.example.bookhub.repository.book.BookRepository;
