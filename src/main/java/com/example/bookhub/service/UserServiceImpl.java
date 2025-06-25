@@ -9,8 +9,8 @@ import com.example.bookhub.model.User;
 import com.example.bookhub.model.enums.RoleName;
 import com.example.bookhub.repository.role.RoleRepository;
 import com.example.bookhub.repository.user.UserRepository;
-import java.util.Set;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService {
         userToSave.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
         Role userRole = roleRepository.findByName(RoleName.USER)
-                .orElseThrow(() -> new EntityNotFoundException("Role " + RoleName.USER + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Role " + RoleName.USER + " not found"));
 
         userToSave.setRoles(Set.of(userRole));
         userRepository.save(userToSave);
