@@ -48,7 +48,7 @@ public class User implements UserDetails {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

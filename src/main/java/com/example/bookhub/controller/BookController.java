@@ -31,14 +31,14 @@ public class BookController {
 
     private final BookService bookService;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     @Operation(summary = "Get all books", description = "Get all books")
     public Page<BookDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
@@ -67,7 +67,7 @@ public class BookController {
         bookService.deleteById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/search")
     public List<BookDto> search(BookSearchParameters bookSearchParameters) {
         return bookService.search(bookSearchParameters);
