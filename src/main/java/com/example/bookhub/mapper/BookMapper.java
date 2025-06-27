@@ -6,11 +6,12 @@ import com.example.bookhub.dto.book.BookDtoWithoutCategoryIds;
 import com.example.bookhub.dto.book.CreateBookRequestDto;
 import com.example.bookhub.model.Book;
 import com.example.bookhub.model.Category;
+import com.example.bookhub.repository.category.CategoryRepository;
+import java.util.List;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-
-import java.util.List;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
@@ -41,13 +42,14 @@ public interface BookMapper {
     default void mapCategoryIdsToCategories(
             @MappingTarget Book book,
             CreateBookRequestDto dto,
-            @org.mapstruct.Context com.example.bookhub.repository.category.CategoryRepository categoryRepository
+            @Context CategoryRepository categoryRepository
     ) {
         if (dto.getCategoryIds() != null) {
             book.setCategories(
                     dto.getCategoryIds().stream()
                             .map(id -> categoryRepository.findById(id)
-                                    .orElseThrow(() -> new RuntimeException("Category not found with id " + id)))
+                                    .orElseThrow(() -> new RuntimeException(
+                                            "Category not found with id " + id)))
                             .collect(java.util.stream.Collectors.toSet())
             );
         }
