@@ -2,10 +2,15 @@ package com.example.bookhub.mapper;
 
 import com.example.bookhub.config.MapperConfig;
 import com.example.bookhub.dto.book.BookDto;
+import com.example.bookhub.dto.book.BookDtoWithoutCategoryIds;
 import com.example.bookhub.dto.book.CreateBookRequestDto;
 import com.example.bookhub.model.Book;
+import com.example.bookhub.model.Category;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+
+import java.util.List;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
@@ -13,9 +18,38 @@ public interface BookMapper {
 
     @org.mapstruct.Mapping(target = "id", ignore = true)
     @org.mapstruct.Mapping(target = "deleted", ignore = true)
-    Book toModel(CreateBookRequestDto requestDto);
+    Book toEntity(CreateBookRequestDto requestDto);
 
     @org.mapstruct.Mapping(target = "id", ignore = true)
     @org.mapstruct.Mapping(target = "deleted", ignore = true)
     void updateFromDto(@MappingTarget Book book, CreateBookRequestDto requestDto);
+
+    BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
+
+    @AfterMapping
+    default void setCategoryIds(@MappingTarget BookDto bookDto, Book book) {
+        if (book.getCategories() != null) {
+            List<Long> categoryIds = book.getCategories()
+                    .stream()
+                    .map(Category::getId)
+                    .toList();
+            bookDto.setCategoryIds(categoryIds);
+        }
+    }
+
+    @AfterMapping
+    default void mapCategoryIdsToCategories(
+            @MappingTarget Book book,
+            CreateBookRequestDto dto,
+            @org.mapstruct.Context com.example.bookhub.repository.category.CategoryRepository categoryRepository
+    ) {
+        if (dto.getCategoryIds() != null) {
+            book.setCategories(
+                    dto.getCategoryIds().stream()
+                            .map(id -> categoryRepository.findById(id)
+                                    .orElseThrow(() -> new RuntimeException("Category not found with id " + id)))
+                            .collect(java.util.stream.Collectors.toSet())
+            );
+        }
+    }
 }
