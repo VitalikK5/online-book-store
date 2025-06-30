@@ -30,10 +30,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toEntity(requestDto);
-        Set<Category> categories =
-                new HashSet<>(categoryRepository.findAllById(requestDto.getCategoryIds()));
-        book.setCategories(categories);
-        return bookMapper.toDto(bookRepository.save(book));
+        setCategoriesToBook(book, requestDto.getCategoryIds());
+        Book savedBook = bookRepository.save(book);
+        return bookMapper.toDto(savedBook);
     }
 
     @Override
@@ -54,10 +53,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + id));
         bookMapper.updateFromDto(book, requestDto);
-
-        Set<Category> categories =
-                new HashSet<>(categoryRepository.findAllById(requestDto.getCategoryIds()));
-        book.setCategories(categories);
+        setCategoriesToBook(book, requestDto.getCategoryIds());
         Book updatedBook = bookRepository.save(book);
         return bookMapper.toDto(updatedBook);
     }
@@ -75,5 +71,10 @@ public class BookServiceImpl implements BookService {
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();
+    }
+
+    private void setCategoriesToBook(Book book, List<Long> categoryIds) {
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(categoryIds));
+        book.setCategories(categories);
     }
 }

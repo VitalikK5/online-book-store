@@ -32,7 +32,7 @@ public interface BookMapper {
             List<Long> categoryIds = book.getCategories()
                     .stream()
                     .map(Category::getId)
-                    .collect(Collectors.toList());
+                    .toList();
             bookDto.setCategoryIds(categoryIds);
         }
     }
