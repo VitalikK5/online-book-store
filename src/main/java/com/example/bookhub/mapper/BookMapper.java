@@ -7,7 +7,6 @@ import com.example.bookhub.dto.book.CreateBookRequestDto;
 import com.example.bookhub.model.Book;
 import com.example.bookhub.model.Category;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
