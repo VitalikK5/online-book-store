@@ -7,7 +7,6 @@ import com.example.bookhub.mapper.ShoppingCartMapper;
 import com.example.bookhub.model.Book;
 import com.example.bookhub.model.CartItem;
 import com.example.bookhub.model.ShoppingCart;
-import com.example.bookhub.model.User;
 import com.example.bookhub.repository.book.BookRepository;
 import com.example.bookhub.repository.cartitem.CartItemRepository;
 import com.example.bookhub.repository.shoppingcart.ShoppingCartRepository;
@@ -89,7 +88,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private ShoppingCart getShoppingCartByCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email))
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User not found with email: " + email))
                 .getId();
         return cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
