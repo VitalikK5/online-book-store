@@ -46,7 +46,8 @@ public class ShoppingCartController {
     @Operation(summary = "Update quantity of a book",
             description = "Update quantity of a book in the shopping cart")
     public ShoppingCartDto updateQuantity(@PathVariable Long cartItemId,
-                                          @RequestBody @Valid UpdateCartItemQuantityRequestDto quantityDto) {
+                                          @RequestBody @Valid UpdateCartItemQuantityRequestDto quantityDto
+    ) {
         return shoppingCartService.updateQuantity(cartItemId, quantityDto);
     }
 
