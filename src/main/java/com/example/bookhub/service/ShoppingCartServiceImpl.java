@@ -1,8 +1,8 @@
 package com.example.bookhub.service;
 
 import com.example.bookhub.dto.book.AddBookToCartRequestDto;
-import com.example.bookhub.dto.shoppingcart.UpdateCartItemQuantityRequestDto;
 import com.example.bookhub.dto.shoppingcart.ShoppingCartDto;
+import com.example.bookhub.dto.shoppingcart.UpdateCartItemQuantityRequestDto;
 import com.example.bookhub.mapper.ShoppingCartMapper;
 import com.example.bookhub.model.Book;
 import com.example.bookhub.model.CartItem;
@@ -45,7 +45,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Optional<CartItem> existing = cartItemRepository
                 .findByShoppingCartIdAndBookId(cart.getId(), dto.getBookId());
 
-
         if (existing.isPresent()) {
             CartItem item = existing.get();
             item.setQuantity(item.getQuantity() + dto.getQuantity());
@@ -63,7 +62,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto updateQuantity(Long cartItemId, UpdateCartItemQuantityRequestDto quantityDto) {
+    public ShoppingCartDto updateQuantity(Long cartItemId,
+                                          UpdateCartItemQuantityRequestDto quantityDto) {
         CartItem item = findUserCartItem(cartItemId);
         item.setQuantity(quantityDto.getQuantity());
         cartItemRepository.save(item);

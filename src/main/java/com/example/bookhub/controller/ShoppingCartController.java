@@ -1,8 +1,8 @@
 package com.example.bookhub.controller;
 
 import com.example.bookhub.dto.book.AddBookToCartRequestDto;
-import com.example.bookhub.dto.shoppingcart.UpdateCartItemQuantityRequestDto ;
 import com.example.bookhub.dto.shoppingcart.ShoppingCartDto;
+import com.example.bookhub.dto.shoppingcart.UpdateCartItemQuantityRequestDto;
 import com.example.bookhub.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,7 +46,7 @@ public class ShoppingCartController {
     @Operation(summary = "Update quantity of a book",
             description = "Update quantity of a book in the shopping cart")
     public ShoppingCartDto updateQuantity(@PathVariable Long cartItemId,
-                                          @RequestBody @Valid UpdateCartItemQuantityRequestDto  quantityDto) {
+                                          @RequestBody @Valid UpdateCartItemQuantityRequestDto quantityDto) {
         return shoppingCartService.updateQuantity(cartItemId, quantityDto);
     }
 
