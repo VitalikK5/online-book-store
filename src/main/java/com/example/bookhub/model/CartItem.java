@@ -16,7 +16,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = "shoppingCart")
+@ToString(exclude = {"shoppingCart", "book"})
 @Table(name = "cart_items")
 public class CartItem {
     @Id

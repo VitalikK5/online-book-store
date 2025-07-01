@@ -1,7 +1,7 @@
 package com.example.bookhub.controller;
 
 import com.example.bookhub.dto.book.AddBookToCartRequestDto;
-import com.example.bookhub.dto.shoppingcart.QuantityDto;
+import com.example.bookhub.dto.shoppingcart.UpdateCartItemQuantityRequestDto ;
 import com.example.bookhub.dto.shoppingcart.ShoppingCartDto;
 import com.example.bookhub.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,14 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     @Operation(summary = "Get user's shopping cart", description = "Get user's shopping cart")
     public ShoppingCartDto getShoppingCart() {
         return shoppingCartService.getShoppingCart();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
     @Operation(summary = "Add book to the shopping cart",
             description = "Add book to the shopping cart")
@@ -41,16 +41,16 @@ public class ShoppingCartController {
         return shoppingCartService.addBookToShoppingCart(addBookRequestDto);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("items/{cartItemId}")
     @Operation(summary = "Update quantity of a book",
             description = "Update quantity of a book in the shopping cart")
     public ShoppingCartDto updateQuantity(@PathVariable Long cartItemId,
-                                          @RequestBody @Valid QuantityDto quantity) {
-        return shoppingCartService.updateQuantity(cartItemId, quantity);
+                                          @RequestBody @Valid UpdateCartItemQuantityRequestDto  quantityDto) {
+        return shoppingCartService.updateQuantity(cartItemId, quantityDto);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("items/{cartItemId}")
     @Operation(summary = "Remove book from shopping cart",
             description = "Remove a book from the shopping cart")

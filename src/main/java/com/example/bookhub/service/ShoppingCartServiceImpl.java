@@ -1,7 +1,7 @@
 package com.example.bookhub.service;
 
 import com.example.bookhub.dto.book.AddBookToCartRequestDto;
-import com.example.bookhub.dto.shoppingcart.QuantityDto;
+import com.example.bookhub.dto.shoppingcart.UpdateCartItemQuantityRequestDto;
 import com.example.bookhub.dto.shoppingcart.ShoppingCartDto;
 import com.example.bookhub.mapper.ShoppingCartMapper;
 import com.example.bookhub.model.Book;
@@ -41,9 +41,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Book book = bookRepository.findById(dto.getBookId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Book not found by id: " + dto.getBookId()));
-        Optional<CartItem> existing = cart.getCartItems().stream()
-                .filter(item -> item.getBook().getId().equals(dto.getBookId()))
-                .findFirst();
+
+        Optional<CartItem> existing = cartItemRepository
+                .findByShoppingCartIdAndBookId(cart.getId(), dto.getBookId());
+
+
         if (existing.isPresent()) {
             CartItem item = existing.get();
             item.setQuantity(item.getQuantity() + dto.getQuantity());
@@ -61,9 +63,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto updateQuantity(Long cartItemId, QuantityDto quantity) {
+    public ShoppingCartDto updateQuantity(Long cartItemId, UpdateCartItemQuantityRequestDto quantityDto) {
         CartItem item = findUserCartItem(cartItemId);
-        item.setQuantity(quantity.getQuantity());
+        item.setQuantity(quantityDto.getQuantity());
         cartItemRepository.save(item);
         return shoppingCartMapper.toDto(cartRepository.save(item.getShoppingCart()));
     }
