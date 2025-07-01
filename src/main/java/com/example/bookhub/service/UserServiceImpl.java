@@ -8,8 +8,8 @@ import com.example.bookhub.model.Role;
 import com.example.bookhub.model.ShoppingCart;
 import com.example.bookhub.model.User;
 import com.example.bookhub.model.enums.RoleName;
-import com.example.bookhub.repository.shoppingcart.ShoppingCartRepository;
 import com.example.bookhub.repository.role.RoleRepository;
+import com.example.bookhub.repository.shoppingcart.ShoppingCartRepository;
 import com.example.bookhub.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Set;
@@ -51,11 +51,13 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.modelToResponse(userToSave);
     }
+
     @Override
     public Long getCurrentUserId() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email))
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User not found with email: " + email))
                 .getId();
     }
 }
