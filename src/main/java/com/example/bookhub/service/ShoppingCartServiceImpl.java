@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,18 +27,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemRepository cartItemRepository;
     private final BookRepository bookRepository;
     private final ShoppingCartMapper shoppingCartMapper;
-    private final UserService userService;
     private final UserRepository userRepository;
 
     @Override
     public ShoppingCartDto getShoppingCart() {
-        ShoppingCart cart = getOrCreateCart(userService.getCurrentUserId());
+        ShoppingCart cart = getShoppingCartByCurrentUser();
         return shoppingCartMapper.toDto(cart);
     }
 
     @Override
     public ShoppingCartDto addBookToShoppingCart(AddBookToCartRequestDto dto) {
-        ShoppingCart cart = getOrCreateCart(userService.getCurrentUserId());
+        ShoppingCart cart = getShoppingCartByCurrentUser();
         Book book = bookRepository.findById(dto.getBookId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Book not found by id: " + dto.getBookId()));
@@ -79,21 +79,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(cartRepository.save(cart));
     }
 
-    @Override
-    public void createShoppingCart(User user) {
-        ShoppingCart cart = new ShoppingCart();
-        cart.setUser(user);
-        cartRepository.save(cart);
-    }
-
     private CartItem findUserCartItem(Long cartItemId) {
-        ShoppingCart cart = getOrCreateCart(userService.getCurrentUserId());
+        ShoppingCart cart = getShoppingCartByCurrentUser();
         return cartItemRepository.findByIdAndShoppingCartId(cartItemId, cart.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Cart item not found by id: " + cartItemId));
     }
 
-    private ShoppingCart getOrCreateCart(Long userId) {
+    private ShoppingCart getShoppingCartByCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email))
+                .getId();
         return cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Shopping cart not found for user with id: " + userId));

@@ -5,9 +5,11 @@ import com.example.bookhub.dto.user.UserResponseDto;
 import com.example.bookhub.exception.RegistrationException;
 import com.example.bookhub.mapper.UserMapper;
 import com.example.bookhub.model.Role;
+import com.example.bookhub.model.ShoppingCart;
 import com.example.bookhub.model.User;
 import com.example.bookhub.model.enums.RoleName;
 import com.example.bookhub.repository.role.RoleRepository;
+import com.example.bookhub.repository.shoppingcart.ShoppingCartRepository;
 import com.example.bookhub.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    private final ShoppingCartService shoppingCartService;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
@@ -44,8 +46,10 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Set.of(userRole));
 
         userRepository.save(user);
-        shoppingCartService.createShoppingCart(user);
 
+        ShoppingCart cart = new ShoppingCart();
+        cart.setUser(user);
+        shoppingCartRepository.save(cart);
         return userMapper.modelToResponse(user);
     }
 
