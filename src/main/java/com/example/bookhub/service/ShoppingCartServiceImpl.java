@@ -95,10 +95,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private ShoppingCart getOrCreateCart(Long userId) {
         return cartRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    ShoppingCart cart = new ShoppingCart();
-                    cart.setUser(userRepository.getReferenceById(userId));
-                    return cartRepository.save(cart);
-                });
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Shopping cart not found for user with id: " + userId));
     }
 }
