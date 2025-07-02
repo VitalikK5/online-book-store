@@ -1,8 +1,10 @@
 package com.example.bookhub.service;
 
 import com.example.bookhub.dto.order.CreateOrderRequestDto;
-import com.example.bookhub.dto.order.OrderItemWithoutPriceResponseDto;
+import com.example.bookhub.dto.order.OrderItemDto;
 import com.example.bookhub.dto.order.OrderResponseDto;
+import com.example.bookhub.exception.OrderProcessingException;
+import com.example.bookhub.mapper.OrderItemMapper;
 import com.example.bookhub.mapper.OrderMapper;
 import com.example.bookhub.model.CartItem;
 import com.example.bookhub.model.Order;
@@ -37,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemRepository cartItemRepository;
     private final ShoppingCartRepository cartRepository;
     private final OrderMapper orderMapper;
+    private final OrderItemMapper orderItemMapper;
 
     @Override
     public OrderResponseDto placeOrder(CreateOrderRequestDto requestDto) {
@@ -44,13 +47,21 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCart cart = cartRepository.findByUserId(currentUser.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Shopping cart not found for user: " + currentUser.getId()));
+
         Set<CartItem> cartItems = cart.getCartItems();
         if (cartItems.isEmpty()) {
-            throw new IllegalArgumentException("Cannot place an order with an empty cart");
+            throw new OrderProcessingException("Cannot place an order with an empty cart. User ID: " + currentUser.getId());
         }
 
+        Order order = buildOrder(requestDto, currentUser, cartItems);
+        cart.getCartItems().clear();
+
+        return orderMapper.toDto(orderRepository.save(order));
+    }
+
+    private Order buildOrder(CreateOrderRequestDto requestDto, User user, Set<CartItem> cartItems) {
         Order order = new Order();
-        order.setUser(currentUser);
+        order.setUser(user);
         order.setStatus(Status.PENDING);
         order.setOrderDate(LocalDateTime.now());
         order.setShippingAddress(requestDto.shippingAddress());
@@ -71,12 +82,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTotal(total);
         order.setOrderItems(orderItems);
-
-        Order savedOrder = orderRepository.save(order);
-        orderItemRepository.saveAll(orderItems);
-        cartItemRepository.deleteAll(cartItems);
-
-        return orderMapper.toDto(savedOrder);
+        return order;
     }
 
     @Override
@@ -97,21 +103,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderItemWithoutPriceResponseDto> getAllItemsByOrderId(Long orderId) {
+    public List<OrderItemDto> getAllItemsByOrderId(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Order with ID %d not found", orderId)));
 
         return order.getOrderItems().stream()
-                .map(item -> new OrderItemWithoutPriceResponseDto(
-                        item.getId(),
-                        item.getBook().getId(),
-                        item.getQuantity()))
+                .map(orderItemMapper::toDto)
                 .toList();
     }
 
     @Override
-    public OrderItemWithoutPriceResponseDto getOrderItemById(Long orderId, Long itemId) {
+    public OrderItemDto getOrderItemById(Long orderId, Long itemId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Order with ID %d not found", orderId)));
@@ -119,14 +122,9 @@ public class OrderServiceImpl implements OrderService {
         return order.getOrderItems().stream()
                 .filter(item -> item.getId().equals(itemId))
                 .findFirst()
-                .map(item -> new OrderItemWithoutPriceResponseDto(
-                        item.getId(),
-                        item.getBook().getId(),
-                        item.getQuantity()))
+                .map(orderItemMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(
-                                "Item with ID %d not found in this order %d", itemId, orderId
-                        )));
+                        String.format("Item with ID %d not found in this order %d", itemId, orderId)));
     }
 
     private User getCurrentUser() {

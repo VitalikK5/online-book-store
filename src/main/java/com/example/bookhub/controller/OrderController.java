@@ -1,7 +1,7 @@
 package com.example.bookhub.controller;
 
 import com.example.bookhub.dto.order.CreateOrderRequestDto;
-import com.example.bookhub.dto.order.OrderItemWithoutPriceResponseDto;
+import com.example.bookhub.dto.order.OrderItemDto;
 import com.example.bookhub.dto.order.OrderResponseDto;
 import com.example.bookhub.dto.order.UpdateOrderStatusRequestDto;
 import com.example.bookhub.service.OrderService;
@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Order Management", description = "Endpoints for managing orders")
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
@@ -41,11 +42,11 @@ public class OrderController {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get order history for the current user")
-    public List<OrderResponseDto> getOrderHistory(Pageable pageable) {
-        return orderService.getOrderHistory(pageable).getContent();
+    public Page<OrderResponseDto> getOrderHistory(Pageable pageable) {
+        return orderService.getOrderHistory(pageable);
     }
 
-    @PatchMapping("/{orderId}/status")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update order status (ADMIN only)")
     public OrderResponseDto updateStatus(
@@ -57,7 +58,7 @@ public class OrderController {
     @GetMapping("/{orderId}/items")
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get all items by order ID")
-    public List<OrderItemWithoutPriceResponseDto> getAllItems(
+    public List<OrderItemDto> getAllItems(
             @PathVariable Long orderId) {
         return orderService.getAllItemsByOrderId(orderId);
     }
@@ -65,7 +66,7 @@ public class OrderController {
     @GetMapping("/{orderId}/items/{itemId}")
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get order item by order ID and item ID")
-    public OrderItemWithoutPriceResponseDto getItemById(
+    public OrderItemDto getItemById(
             @PathVariable Long orderId,
             @PathVariable Long itemId) {
         return orderService.getOrderItemById(orderId, itemId);

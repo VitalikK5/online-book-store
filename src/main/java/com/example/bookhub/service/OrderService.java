@@ -1,7 +1,7 @@
 package com.example.bookhub.service;
 
 import com.example.bookhub.dto.order.CreateOrderRequestDto;
-import com.example.bookhub.dto.order.OrderItemWithoutPriceResponseDto;
+import com.example.bookhub.dto.order.OrderItemDto;
 import com.example.bookhub.dto.order.OrderResponseDto;
 import com.example.bookhub.model.enums.Status;
 import java.util.List;
@@ -15,7 +15,7 @@ public interface OrderService {
 
     OrderResponseDto updateStatus(Long orderId, Status status);
 
-    List<OrderItemWithoutPriceResponseDto> getAllItemsByOrderId(Long orderId);
+    List<OrderItemDto> getAllItemsByOrderId(Long orderId);
 
-    OrderItemWithoutPriceResponseDto getOrderItemById(Long orderId, Long itemId);
+    OrderItemDto getOrderItemById(Long orderId, Long itemId);
 }
