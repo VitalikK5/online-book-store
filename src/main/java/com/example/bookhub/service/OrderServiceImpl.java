@@ -8,8 +8,8 @@ import com.example.bookhub.model.CartItem;
 import com.example.bookhub.model.Order;
 import com.example.bookhub.model.OrderItem;
 import com.example.bookhub.model.ShoppingCart;
-import com.example.bookhub.model.enums.Status;
 import com.example.bookhub.model.User;
+import com.example.bookhub.model.enums.Status;
 import com.example.bookhub.repository.cartitem.CartItemRepository;
 import com.example.bookhub.repository.order.OrderItemRepository;
 import com.example.bookhub.repository.order.OrderRepository;
@@ -21,12 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Order with ID %d not found", orderId)));
 
-            order.setStatus(status);
+        order.setStatus(status);
         return orderMapper.toDto(orderRepository.save(order));
     }
 
@@ -124,7 +124,9 @@ public class OrderServiceImpl implements OrderService {
                         item.getBook().getId(),
                         item.getQuantity()))
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Item with ID %d not found in this order %d", itemId, orderId)));
+                        String.format(
+                                "Item with ID %d not found in this order %d", itemId, orderId
+                        )));
     }
 
     private User getCurrentUser() {
