@@ -44,13 +44,17 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Role " + RoleName.USER + " not found"));
         user.setRoles(Set.of(userRole));
-
         userRepository.save(user);
 
+        createShoppingCart(user);
+
+        return userMapper.modelToResponse(user);
+    }
+
+    private void createShoppingCart(User user) {
         ShoppingCart cart = new ShoppingCart();
         cart.setUser(user);
         shoppingCartRepository.save(cart);
-        return userMapper.modelToResponse(user);
     }
 
     @Override
