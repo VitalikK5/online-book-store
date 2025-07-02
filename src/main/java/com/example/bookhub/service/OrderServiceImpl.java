@@ -50,7 +50,9 @@ public class OrderServiceImpl implements OrderService {
 
         Set<CartItem> cartItems = cart.getCartItems();
         if (cartItems.isEmpty()) {
-            throw new OrderProcessingException("Cannot place an order with an empty cart. User ID: " + currentUser.getId());
+            throw new OrderProcessingException(
+                    "Cannot place an order with an empty cart. User ID: " + currentUser.getId()
+            );
         }
 
         Order order = buildOrder(requestDto, currentUser, cartItems);
@@ -124,7 +126,9 @@ public class OrderServiceImpl implements OrderService {
                 .findFirst()
                 .map(orderItemMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Item with ID %d not found in this order %d", itemId, orderId)));
+                        String.format(
+                                "Item with ID %d not found in this order %d", itemId, orderId
+                        )));
     }
 
     private User getCurrentUser() {
