@@ -61,32 +61,6 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(orderRepository.save(order));
     }
 
-    private Order buildOrder(CreateOrderRequestDto requestDto, User user, Set<CartItem> cartItems) {
-        Order order = new Order();
-        order.setUser(user);
-        order.setStatus(Status.PENDING);
-        order.setOrderDate(LocalDateTime.now());
-        order.setShippingAddress(requestDto.shippingAddress());
-
-        Set<OrderItem> orderItems = cartItems.stream()
-                .map(cartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setOrder(order);
-                    orderItem.setBook(cartItem.getBook());
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPrice(cartItem.getBook().getPrice());
-                    return orderItem;
-                }).collect(Collectors.toSet());
-
-        BigDecimal total = orderItems.stream()
-                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        order.setTotal(total);
-        order.setOrderItems(orderItems);
-        return order;
-    }
-
     @Override
     public Page<OrderResponseDto> getOrderHistory(Pageable pageable) {
         User user = getCurrentUser();
@@ -117,18 +91,38 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderItemDto getOrderItemById(Long orderId, Long itemId) {
-        Order order = orderRepository.findById(orderId)
+        OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Order with ID %d not found", orderId)));
+                        String.format("Item with ID %d not found in order %d", itemId, orderId)
+                ));
 
-        return order.getOrderItems().stream()
-                .filter(item -> item.getId().equals(itemId))
-                .findFirst()
-                .map(orderItemMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(
-                                "Item with ID %d not found in this order %d", itemId, orderId
-                        )));
+        return orderItemMapper.toDto(orderItem);
+    }
+
+    private Order buildOrder(CreateOrderRequestDto requestDto, User user, Set<CartItem> cartItems) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setStatus(Status.PENDING);
+        order.setOrderDate(LocalDateTime.now());
+        order.setShippingAddress(requestDto.shippingAddress());
+
+        Set<OrderItem> orderItems = cartItems.stream()
+                .map(cartItem -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(order);
+                    orderItem.setBook(cartItem.getBook());
+                    orderItem.setQuantity(cartItem.getQuantity());
+                    orderItem.setPrice(cartItem.getBook().getPrice());
+                    return orderItem;
+                }).collect(Collectors.toSet());
+
+        BigDecimal total = orderItems.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setTotal(total);
+        order.setOrderItems(orderItems);
+        return order;
     }
 
     private User getCurrentUser() {
