@@ -132,7 +132,9 @@ class BookControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        BookDto actual = objectMapper.readValue(result.getResponse().getContentAsString(), BookDto.class);
+        BookDto actual = objectMapper.readValue(
+                result.getResponse().getContentAsString(), BookDto.class
+        );
         assertNotNull(actual.getId());
         assertTrue(reflectionEquals(expected, actual, "id"));
     }
@@ -149,7 +151,9 @@ class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        BookDto actual = objectMapper.readValue(result.getResponse().getContentAsString(), BookDto.class);
+        BookDto actual = objectMapper.readValue(
+                result.getResponse().getContentAsString(), BookDto.class
+        );
         assertTrue(reflectionEquals(expected, actual, "id"));
     }
 
