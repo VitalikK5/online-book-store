@@ -111,7 +111,9 @@ class BookControllerTest {
                 "/books/{id}", 1))
                 .andExpect(status().isOk())
                 .andReturn();
-        BookDto actual = objectMapper.readValue(result.getResponse().getContentAsString(), BookDto.class);
+        BookDto actual = objectMapper.readValue(
+                result.getResponse().getContentAsString(), BookDto.class
+        );
         BookDto expected = createListOfBookDtos().get(0);
         assertEquals(expected, actual);
     }
