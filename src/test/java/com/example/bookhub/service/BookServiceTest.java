@@ -22,13 +22,12 @@ import com.example.bookhub.model.Category;
 import com.example.bookhub.repository.book.BookRepository;
 import com.example.bookhub.repository.book.BookSpecificationBuilder;
 import com.example.bookhub.repository.category.CategoryRepository;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -192,9 +191,13 @@ class BookServiceTest {
     void search_withValidParams_returnsBooks() {
         Book book = createBook(1L, Set.of());
         BookDto bookDto = createBookDto(1L, List.of(1L));
-        BookSearchParameters params = new BookSearchParameters(null, new String[]{"Test Author"}, null, null);
+        BookSearchParameters params = new BookSearchParameters(
+                null, new String[]{"Test Author"}, null, null
+        );
 
-        Specification<Book> specification = (Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> cb.conjunction();
+        Specification<Book> specification = (
+                Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder cb
+        ) -> cb.conjunction();
 
         when(bookSpecificationBuilder.build(params)).thenReturn(specification);
         when(bookRepository.findAll(specification)).thenReturn(List.of(book));

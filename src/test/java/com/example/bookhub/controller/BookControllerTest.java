@@ -8,7 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.bookhub.dto.book.BookDto;
@@ -104,7 +107,8 @@ class BookControllerTest {
     @Test
     @DisplayName("Get book by id and validate content")
     void findById_WithValidId_ReturnsBookDto() throws Exception {
-        MvcResult result = mockMvc.perform(get("/books/{id}", 1))
+        MvcResult result = mockMvc.perform(get(
+                "/books/{id}", 1))
                 .andExpect(status().isOk())
                 .andReturn();
         BookDto actual = objectMapper.readValue(result.getResponse().getContentAsString(), BookDto.class);
