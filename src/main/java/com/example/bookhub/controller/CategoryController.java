@@ -71,7 +71,7 @@ public class CategoryController {
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}/books")
     @Operation(summary = "Get books", description = "Get books by selected category id")
-    public Page<BookDtoWithoutCategoryIds> getBooksByCategoryId(Long id, Pageable pageable) {
+    public Page<BookDtoWithoutCategoryIds> getBooksByCategoryId(@PathVariable Long id, Pageable pageable) {
         return categoryService.findAllByCategoryId(id, pageable);
     }
 }

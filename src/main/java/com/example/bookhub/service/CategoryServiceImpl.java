@@ -3,12 +3,12 @@ package com.example.bookhub.service;
 import com.example.bookhub.dto.book.BookDtoWithoutCategoryIds;
 import com.example.bookhub.dto.category.CategoryDto;
 import com.example.bookhub.dto.category.CreateCategoryRequestDto;
+import com.example.bookhub.exception.EntityNotFoundException;
 import com.example.bookhub.mapper.BookMapper;
 import com.example.bookhub.mapper.CategoryMapper;
 import com.example.bookhub.model.Category;
 import com.example.bookhub.repository.book.BookRepository;
 import com.example.bookhub.repository.category.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +54,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteById(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new EntityNotFoundException("Can't find category by id: " + id);
+        }
         categoryRepository.deleteById(id);
     }
 
