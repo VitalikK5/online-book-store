@@ -30,6 +30,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -42,18 +43,22 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BookControllerTest {
 
-    protected static MockMvc mockMvc;
+    private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext applicationContext;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeAll
-    static void beforeAll(
-            @Autowired WebApplicationContext applicationContext,
-            @Autowired DataSource dataSource
-    ) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
@@ -62,7 +67,7 @@ class BookControllerTest {
     }
 
     @BeforeEach
-    void beforeEach(@Autowired DataSource dataSource) throws SQLException {
+    void beforeEach() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection,
@@ -71,7 +76,7 @@ class BookControllerTest {
     }
 
     @AfterEach
-    void afterEach(@Autowired DataSource dataSource) {
+    void afterEach() {
         teardown(dataSource);
     }
 
