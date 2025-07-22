@@ -3,13 +3,13 @@ package com.example.bookhub.service;
 import com.example.bookhub.dto.book.BookDto;
 import com.example.bookhub.dto.book.BookSearchParameters;
 import com.example.bookhub.dto.book.CreateBookRequestDto;
+import com.example.bookhub.exception.EntityNotFoundException;
 import com.example.bookhub.mapper.BookMapper;
 import com.example.bookhub.model.Book;
 import com.example.bookhub.model.Category;
 import com.example.bookhub.repository.book.BookRepository;
 import com.example.bookhub.repository.book.BookSpecificationBuilder;
 import com.example.bookhub.repository.category.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +44,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto findById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can not find book with id" + id));
+                .orElseThrow(() -> new EntityNotFoundException("Can not find book with id: " + id));
         return bookMapper.toDto(book);
     }
 
@@ -60,6 +60,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Can't find book by id: " + id);
+        }
         bookRepository.deleteById(id);
     }
 
