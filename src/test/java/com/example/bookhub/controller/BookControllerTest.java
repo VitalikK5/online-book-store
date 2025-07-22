@@ -65,11 +65,11 @@ class BookControllerTest {
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
                 .build();
-        teardown(dataSource);
     }
 
     @BeforeEach
     void beforeEach() throws SQLException {
+        teardown(dataSource);
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection,

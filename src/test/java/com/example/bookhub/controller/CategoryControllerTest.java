@@ -57,13 +57,13 @@ class CategoryControllerTest {
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
                 .build();
-        teardown(dataSource);
     }
 
     @BeforeEach
     void beforeEach(
             @Autowired DataSource dataSource,
             @Autowired WebApplicationContext applicationContext) throws SQLException {
+        teardown(dataSource);
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
