@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
@@ -66,10 +67,18 @@ class CategoryControllerTest {
             @Autowired WebApplicationContext applicationContext) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
+
+            // Вставляємо дані
             ScriptUtils.executeSqlScript(
                     connection,
                     new ClassPathResource("database/insert-books-and-categories.sql")
             );
+
+            // Піднімаємо IDENTITY лічильники
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("ALTER TABLE categories ALTER COLUMN id RESTART WITH 4");
+                stmt.execute("ALTER TABLE books ALTER COLUMN id RESTART WITH 4");
+            }
         }
     }
 
