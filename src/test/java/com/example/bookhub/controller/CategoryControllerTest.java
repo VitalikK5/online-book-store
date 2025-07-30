@@ -68,13 +68,11 @@ class CategoryControllerTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
 
-            // Вставляємо дані
             ScriptUtils.executeSqlScript(
                     connection,
                     new ClassPathResource("database/insert-books-and-categories.sql")
             );
 
-            // Піднімаємо IDENTITY лічильники
             try (Statement stmt = connection.createStatement()) {
                 stmt.execute("ALTER TABLE categories ALTER COLUMN id RESTART WITH 4");
                 stmt.execute("ALTER TABLE books ALTER COLUMN id RESTART WITH 4");
